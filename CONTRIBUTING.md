@@ -6,6 +6,12 @@ Thank you for considering contributing! We believe in **Human Amplification, Not
 
 ---
 
+> **Before you write code: talk to us on [Discord](https://discord.gg/gk8jAdXWmj).**
+>
+> If your change adds features, restructures code, or touches more than a couple of files, **confirm with a maintainer that it fits**. A large PR out of the blue has a high chance of being closed — regardless of effort invested. A five-minute conversation can save you hours.
+
+---
+
 ## Our Philosophy
 
 BMad strengthens human-AI collaboration through specialized agents and guided workflows. Every contribution should answer: **"Does this make humans and AI better together?"**
@@ -35,7 +41,7 @@ BMad strengthens human-AI collaboration through specialized agents and guided wo
 
 ### Bug Reports
 
-After searching, if the bug is unreported, use the [bug report template](https://github.com/bmad-code-org/BMAD-METHOD/issues/new?template=bug_report.md) and include:
+After searching, if the bug is unreported, use the [bug report template](https://github.com/bmad-code-org/BMAD-METHOD/issues/new?template=bug-report.yaml) and include:
 
 - Clear description of the problem
 - Steps to reproduce
@@ -45,7 +51,7 @@ After searching, if the bug is unreported, use the [bug report template](https:/
 
 ### Feature Requests
 
-After searching, use the [feature request template](https://github.com/bmad-code-org/BMAD-METHOD/issues/new?template=feature_request.md) and explain:
+After searching, use the [feature request template](https://github.com/bmad-code-org/BMAD-METHOD/issues/new?template=feature-request.md) and explain:
 
 - What the feature is
 - Why it would benefit the BMad community
@@ -57,15 +63,10 @@ After searching, use the [feature request template](https://github.com/bmad-code
 
 ## Before Starting Work
 
-⚠️ **Required before submitting PRs:**
-
-| Work Type     | Requirement                                    |
-| ------------- | ---------------------------------------------- |
-| Bug fix       | An open issue (create one if it doesn't exist) |
-| Feature       | An open feature request issue                  |
-| Large changes | Discussion via issue first                     |
-
-**Why?** This prevents wasted effort on work that may not align with project direction.
+| Work Type               | Requirement                                              |
+| ----------------------- | -------------------------------------------------------- |
+| Typo / small bug fix    | Just open the PR                                         |
+| Feature or large change | Confirm with a maintainer on Discord **before** you start |
 
 ---
 
@@ -73,7 +74,11 @@ After searching, use the [feature request template](https://github.com/bmad-code
 
 ### Target Branch
 
-Submit PRs to the `main` branch. We use [trunk-based development](https://trunkbaseddevelopment.com/branch-for-release/): `main` is the trunk where all work lands, and stable release branches receive only cherry-picked fixes.
+- **Development:** branch from `dev` and target `dev`.
+- `main` is release-only and remains the default branch.
+- **6.12 npm maintenance:** branch from and target `V6.12`, which still ships through npm.
+
+PRs opened against `main` are retargeted to `dev`.
 
 ### PR Size
 
@@ -83,15 +88,21 @@ Submit PRs to the `main` branch. We use [trunk-based development](https://trunkb
 
 If your change exceeds 800 lines, break it into smaller PRs that can be reviewed independently.
 
+### AI-Generated Code
+
+Given the nature of this project, we expect most contributions involve AI assistance — that's fine. What we require is **heavy human curation**. You must understand every line you're submitting, have made deliberate choices about what to include, and be able to explain your reasoning.
+
+We will reject PRs that read like raw LLM output: bulk refactors nobody asked for, unsolicited "improvements" across many files, or changes where the submitter clearly hasn't read the existing code. Using AI to write code is normal here; using AI as a substitute for thinking is not.
+
 ### New to Pull Requests?
 
 1. **Fork** the repository
 2. **Clone** your fork: `git clone https://github.com/YOUR-USERNAME/bmad-method.git`
-3. **Create a branch**: `git checkout -b fix/description` or `git checkout -b feature/description`
+3. **Branch from upstream dev**: add `git remote add upstream https://github.com/bmad-code-org/BMAD-METHOD.git`, run `git fetch upstream dev`, then `git switch -c fix/description upstream/dev` (or use `feature/description`).
 4. **Make changes** — keep them focused
 5. **Commit**: `git commit -m "fix: correct typo in README"`
 6. **Push**: `git push origin fix/description`
-7. **Open PR** from your fork on GitHub
+7. **Open PR** from your fork into `bmad-code-org/BMAD-METHOD` with `dev` as the base branch.
 
 ### PR Description Template
 
@@ -126,6 +137,13 @@ Use conventional commits:
 
 Keep messages under 72 characters. Each commit = one logical change.
 
+### Checks
+
+Your PR must pass the `Quality & Validation` checks. How you get there is up to you. Two options:
+
+- Install the pre-commit hook once per clone with `uv run pre-commit install`. It runs the Python-side lint, validation, and tests on every commit.
+- Run every check CI runs, including the docs site, with `uv sync --frozen && (cd docs-site && npm ci) && uv run --frozen tools/quality.py`.
+
 ---
 
 ## What Makes a Good PR?
@@ -144,26 +162,24 @@ Keep messages under 72 characters. Each commit = one logical change.
 
 - Keep dev agents lean — focus on coding context, not documentation
 - Web/planning agents can be larger with complex tasks
-- Everything is natural language (markdown) — no code in core framework
+- Skills and workflows are natural language (markdown); deterministic helpers are Python scripts run through `uv`
 - Use BMad modules for domain-specific features
-- Validate YAML schemas: `npm run validate:schemas`
-- Validate file references: `npm run validate:refs`
+- Validate file references: `uv run tools/validate_file_refs.py --strict`
 
 ### File-Pattern-to-Validator Mapping
 
 | File Pattern | Validator | Extraction Function |
 | ------------ | --------- | ------------------- |
-| `*.yaml`, `*.yml` | `validate-file-refs.js` | `extractYamlRefs` |
-| `*.md`, `*.xml` | `validate-file-refs.js` | `extractMarkdownRefs` |
-| `*.csv` | `validate-file-refs.js` | `extractCsvRefs` |
+| `*.yaml`, `*.yml` | `validate_file_refs.py` | `extract_yaml_refs` |
+| `*.md`, `*.xml` | `validate_file_refs.py` | `extract_markdown_refs` |
 
 ---
 
 ## Need Help?
 
 - 💬 **Discord**: [Join the community](https://discord.gg/gk8jAdXWmj)
-- 🐛 **Bugs**: Use the [bug report template](https://github.com/bmad-code-org/BMAD-METHOD/issues/new?template=bug_report.md)
-- 💡 **Features**: Use the [feature request template](https://github.com/bmad-code-org/BMAD-METHOD/issues/new?template=feature_request.md)
+- 🐛 **Bugs**: Use the [bug report template](https://github.com/bmad-code-org/BMAD-METHOD/issues/new?template=bug-report.yaml)
+- 💡 **Features**: Use the [feature request template](https://github.com/bmad-code-org/BMAD-METHOD/issues/new?template=feature-request.md)
 
 ---
 

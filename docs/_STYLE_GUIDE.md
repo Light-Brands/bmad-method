@@ -5,6 +5,18 @@ description: Project-specific documentation conventions based on Google style an
 
 This project adheres to the [Google Developer Documentation Style Guide](https://developers.google.com/style) and uses [Diataxis](https://diataxis.fr/) to structure content. Only project-specific conventions follow.
 
+## Write in Plain English
+
+Make the main point easy to find and act on. These rules apply to every page:
+
+- At the start, make clear what the page is for and what the reader needs from it.
+- Prefer concrete, familiar words and short sentences.
+- Use specialized terms only when readers need them to use BMAD. Define an unfamiliar term at first use.
+- Use literal language. Avoid decorative metaphors, and do not use a metaphor instead of explaining how something works.
+- Give the gist before qualifications and detailed mechanics.
+- Include implementation details only when they help readers understand or act for that page's purpose. Put exact mechanics and contracts in reference pages or linked deeper material.
+- Remove repetition, opening text that delays the point, inflated claims, and caveats that do not change the reader's decision.
+
 ## Project-Specific Rules
 
 | Rule                             | Specification                            |
@@ -56,16 +68,16 @@ Critical warnings only — data loss, security issues
 | Phase | Name     | What Happens                                 |
 | ----- | -------- | -------------------------------------------- |
 | 1     | Analysis | Brainstorm, research *(optional)*            |
-| 2     | Planning | Requirements — PRD or tech-spec *(required)* |
+| 2     | Planning | Requirements — PRD or spec *(required)* |
 ```
 
-**Commands:**
+**Skills:**
 
 ```md
-| Command      | Agent   | Purpose                              |
+| Skill        | Agent   | Purpose                              |
 | ------------ | ------- | ------------------------------------ |
-| `brainstorm` | Analyst | Brainstorm a new project             |
-| `prd`        | PM      | Create Product Requirements Document |
+| `bmad-brainstorming` | Analyst | Brainstorm a new project             |
+| `bmad-prd`        | PM      | Create Product Requirements Document |
 ```
 
 ## Folder Structure Blocks
@@ -77,10 +89,10 @@ Show in "What You've Accomplished" sections:
 your-project/
 ├── _bmad/                                   # BMad configuration
 ├── _bmad-output/
-│   ├── planning-artifacts/
-│   │   └── PRD.md                           # Your requirements document
-│   ├── implementation-artifacts/
-│   └── project-context.md                   # Implementation rules (optional)
+│   └── initiative-checkout/                 # the active initiative
+│       └── prd-checkout/
+│           └── prd-checkout.md              # Your requirements document
+├── AGENTS.md                                # agent instructions (optional, via bmad-project-context)
 └── ...
 ```
 ````
@@ -99,7 +111,7 @@ your-project/
 9. Step 2: [Second Major Task]
 10. Step 3: [Third Major Task]
 11. What You've Accomplished (summary + folder structure)
-12. Quick Reference (commands table)
+12. Quick Reference (skills table)
 13. Common Questions (FAQ format)
 14. Getting Help (community links)
 15. Key Takeaways (tip admonition)
@@ -111,7 +123,7 @@ your-project/
 - [ ] "What You'll Learn" section present
 - [ ] Prerequisites in admonition
 - [ ] Quick Path TL;DR admonition at top
-- [ ] Tables for phases, commands, agents
+- [ ] Tables for phases, skills, agents
 - [ ] "What You've Accomplished" section present
 - [ ] Quick Reference table present
 - [ ] Common Questions section present
@@ -148,9 +160,8 @@ your-project/
 | ----------------- | ----------------------------- |
 | **Index/Landing** | `core-concepts/index.md`      |
 | **Concept**       | `what-are-agents.md`          |
-| **Feature**       | `quick-flow.md`               |
-| **Philosophy**    | `why-solutioning-matters.md`  |
-| **FAQ**           | `established-projects-faq.md` |
+| **Feature**       | `build.md`                |
+| **Philosophy**    | `design-ux-and-architecture.md` |
 
 ### General Template
 
@@ -160,7 +171,7 @@ your-project/
 3. Key Concepts (### subsections)
 4. Comparison Table (optional)
 5. When to Use / When Not to Use (optional)
-6. Diagram (optional - mermaid, 1 per doc max)
+6. Diagram (optional - see Diagrams below, 1 per doc max)
 7. Next Steps (optional)
 ```
 
@@ -190,7 +201,7 @@ your-project/
 1. Title + Hook (what it does)
 2. Quick Facts (optional - "Perfect for:", "Time to:")
 3. When to Use / When Not to Use
-4. How It Works (mermaid diagram optional)
+4. How It Works (diagram optional)
 5. Key Benefits
 6. Comparison Table (optional)
 7. When to Graduate/Upgrade (optional)
@@ -215,6 +226,30 @@ your-project/
 - [ ] Diagrams have clear labels
 - [ ] Links to how-to guides for procedural questions
 - [ ] 2-3 admonitions max per document
+
+
+## Diagrams
+
+Diagrams are hand-authored SVGs, kept in `docs-site/src/diagrams/`, and embedded
+like an image:
+
+```markdown
+![The bmad-build run](/diagrams/build-run.svg)
+```
+
+They are inlined into the page rather than served as `<img>`, so one stylesheet
+themes every diagram in both light and dark. That means a diagram file carries
+**geometry and classes only, never colours** — use the existing vocabulary
+(`node`, `edge`, `gate`, `panel`, `glyph`, and the `n` / `sub` / `k` text
+classes) and a new diagram will match the others without any styling work.
+
+A README is not a docs page — it loads an SVG as an `<img>`, where no stylesheet
+can reach it — so the ones the READMEs use are exports, in `docs/images/`. After
+changing a source diagram that a README shows, regenerate them:
+
+```bash
+cd docs-site && npm run export-readme-diagrams
+```
 
 ## Reference Structure
 
@@ -243,7 +278,7 @@ your-project/
 1. Title + Hook
 2. Items (## for each item)
    - Brief description (one sentence)
-   - **Commands:** or **Key Info:** as flat list
+   - **Skills:** or **Key Info:** as flat list
 3. Universal/Shared (## section) (optional)
 ```
 
@@ -252,7 +287,7 @@ your-project/
 ```text
 1. Title + Hook (one sentence purpose)
 2. Quick Facts (optional note admonition)
-   - Module, Command, Input, Output as list
+   - Module, Skill, Input, Output as list
 3. Purpose/Overview (## section)
 4. How to Invoke (code block)
 5. Key Sections (## for each aspect)
@@ -280,7 +315,7 @@ your-project/
    - Diagram or table showing organization
 3. Major Sections (## for each phase/category)
    - Items (### for each item)
-   - Standardized fields: Command, Agent, Input, Output, Description
+   - Standardized fields: Skill, Agent, Input, Output, Description
 4. Next Steps (optional)
 ```
 
@@ -324,7 +359,7 @@ Starlight generates right-side "On this page" navigation from headers:
 
 Add italic context at definition start for limited-scope terms:
 
-- `*Quick Flow only.*`
+- `*Direct-entry implementation only.*`
 - `*BMad Method/Enterprise.*`
 - `*Phase N.*`
 - `*BMGD.*`
@@ -349,11 +384,11 @@ Add italic context at definition start for limited-scope terms:
 
 ### Do I always need architecture?
 
-Only for BMad Method and Enterprise tracks. Quick Flow skips to implementation.
+Only for work that benefits from architecture. Clear work can enter implementation directly.
 
 ### Can I change my plan later?
 
-Yes. The SM agent has a `correct-course` workflow for handling scope changes.
+Yes. The `bmad-correct-course` workflow handles scope changes mid-implementation.
 
 **Have a question not answered here?** [Open an issue](...) or ask in [Discord](...).
 ```
@@ -363,8 +398,9 @@ Yes. The SM agent has a `correct-course` workflow for handling scope changes.
 Before submitting documentation changes:
 
 ```bash
-npm run docs:fix-links            # Preview link format fixes
-npm run docs:fix-links -- --write # Apply fixes
-npm run docs:validate-links       # Check links exist
-npm run docs:build                # Verify no build errors
+cd docs-site
+npm run fix-links                 # Preview link format fixes
+npm run fix-links -- --write      # Apply fixes
+npm run validate-links            # Check links exist
+npm run build                     # Verify no build errors
 ```
